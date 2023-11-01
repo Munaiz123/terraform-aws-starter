@@ -1,0 +1,16 @@
+# Ignore Terraform initialization files/directories within the 'terraform' folder
+terraform/.terraform/
+
+# .tfstate files within the 'terraform' folder
+terraform/terraform/*.tfstate
+terraform/terraform/*.tfstate.*
+
+# Exclude all .tfvars files within the 'terraform' folder, which might contain secrets
+terraform/terraform/*.tfvars
+
+# Exclude src folder zip to be included in git
+src.zip
+
+# terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
