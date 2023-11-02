@@ -27,4 +27,4 @@ provider "aws" {
 
 **NOTE: Do NOT commit provider.tf if you're hard coding it in provider.tf**
 
-Coming Soon!
+More Coming Soon!
