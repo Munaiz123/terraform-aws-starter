@@ -25,6 +25,6 @@ provider "aws" {
   secret_key = "YOUR_AWS_SECRET_KEY"
 }  
 
-** NOTE: Do NOT commit provider.tf if you're hard coding it in provider.tf**
+**NOTE: Do NOT commit provider.tf if you're hard coding it in provider.tf**
 
 Coming Soon!
