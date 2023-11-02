@@ -17,12 +17,14 @@ Note: IAM policies and Roles will be integrated but are not listed as an AWS res
 
 ## How to Run Terraform
 1. Download Terraform CLI
-2. Download Access Key & Secret from your AWS account (IAM -> Security Credentials) and set Key & Secret in env Variables or in provider.tf(not recomended) as such:
+2. Download Access Key & Secret from your AWS account (IAM -> Security Credentials) and set Key & Secret in env Variables or in provider.tf(not recomended) as such:  
+
 provider "aws" {
   region     = "us-west-1"
   access_key = "YOUR_AWS_ACCESS_KEY"
   secret_key = "YOUR_AWS_SECRET_KEY"
-}
+}  
+
 ** NOTE: Do NOT commit provider.tf if you're hard coding it in provider.tf**
 
 Coming Soon!
