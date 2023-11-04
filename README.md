@@ -8,10 +8,10 @@ Here are the AWS resources that will be provisioned when you run Terraform (IAM 
 
 - VPC ✅
 - EC2 ✅
-- API Gateway ✅
-- Lambda ✅
-- Cloud Watch (lambda logs) ✅
 - RDS PostgresSQL instance ✅
+- API Gateway ✅
+- Lambda (with S3) ✅
+- Cloud Watch (lambda logs) ✅
 
 Coming Soon:
 - AWS Cognito
@@ -80,7 +80,30 @@ While in the same `/ssh-keys` folder, use this command to access your provisioed
 
 `ssh -i "my_key_pair" ec2-user@<your-ec2-ip-address>`
 
-Once you see something like this: `ubuntu@ip-xx-x-x-xx:~$` then you know you've succesfully connected to your EC2 instance.
+Once you see something like this: `ubuntu@ip-xx-x-x-xx:~$` then you know you've succesfully connected to your EC2 instance. You can also use Cloud 9 to connect to your EC2 instance.
 
-You can also use Cloud 9 to connect to your EC2 instance.**NOTE: Connecting to your EC is not nessary.** I waited till now to tell you because if you still need to use the ssh command above to connect to the database using a database client tool like pgAdmin. More on that under the RDS section below.
+### 3. RDS-PostgreSQL (terraform/rds.tf)
 
+The aws_db_instance.default creates a managed database server using Amazon's Relational Database Service (RDS) with 20 GB of storage.
+
+The database runs PostgreSQL version 15.3, a modern, powerful SQL database system, on a small instance (db.t4g.micro), suitable for low to moderate workloads.
+
+The `aws_db_subnet_group.main_vpc_subnet_group` is essentially a grouping of private zones in your cloud space where a database can securely reside. It uses the private subnet defined in the VPC section above. This means the database will sit in a secure area not directly accessible from the internet. This setup enhances security by isolating the database from public access.
+
+The database is ready for setup with a username, `test_main_dbuser`, but you’ll need to add a password for secure access. 
+
+The easiest way to access your database is to download a database client tool like pgAdmin. 
+
+### 4. API Gateway (terraform/apigateway.tf)
+
+`main_lambda_api` is the gateway for your Lambda function, enabling it to be triggered via HTTP requests (GET, POST, etc). The API defines a public GET method at the API's root path, allowing anyone to access it without authentication.
+
+`main_lambda_integration` connects the GET method to your Lambda function and `apigw_lambda_permission` grants the API Gateway permission to invoke your Lambda function. These two combined allows your front end to interact with your backend.
+
+The API is then deployed with the GET method in a dev stage, making it available for use.
+
+### 5. Lambda (terraform/lambda.tf)
+
+A serverless function called `main-lambda` is set up to run Node.js code stored in S3, with permissions to execute and log activities. CloudWatch captures and stores the Lambda function's logs for two weeks.
+
+You'll notice in the `/src` folder that there is the index.js file. This is the entry point into your backend. All front end requests will travel from the API gateway and hit the index.js file first. This is where you can start coding your backend code. 
