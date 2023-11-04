@@ -1,6 +1,6 @@
 # Terraform AWS Starter
 
-### Welcome to the repo
+### Welcome to the repo! Don't forget to fork and clone on your local machine!
 
 Here you'll find the necessary Terraform code to spin up AWS resources without having to waste time with configurations. (Details below)
 
@@ -25,22 +25,16 @@ Coming Soon:
 2. `git clone` this repository
 3. Download Access Key & Secret from your AWS account
     - IAM -> Security Credentials: set Key & Secret in env Variables or in provider.tf **(not recomended**) as such:  
-
-provider "aws" {
-  region     = "us-west-1"
-  access_key = "YOUR_AWS_ACCESS_KEY"
-  secret_key = "YOUR_AWS_SECRET_KEY"
-}  
-
-**NOTE: Do NOT commit provider.tf if you're hard coding it in provider.tf**
-
-**A better way to handle access/secret key is to add them to env variables. The method shown above is a temporary quickway to connect your terrform to aws account so that you can provision resources quickly**
+    - provider "aws" {  region     = "us-west-1" access_key = "YOUR_AWS_ACCESS_KEY" secret_key = "YOUR_AWS_SECRET_KEY"}  
+    - **NOTE: Do NOT commit provider.tf if you're hard coding it in provider.tf**
+    - **A better way to handle access/secret key is to add them to env variables. The method shown above is a temporary quickway to connect your terrform to aws account so that you can provision resources quickly**
 
 4. Run `terraform init` 
 5. Set your db password on line 17 of rds.tf 
 6. Run `terraform apply` -> 'yes' to confirm
 
-After sometime you should have the following AWS Services provisioned in your AWS account:
+
+**After sometime you should have the following AWS Services provisioned in your AWS account:**
 
 
 ## Provisioned AWS Resources (Detailed):
