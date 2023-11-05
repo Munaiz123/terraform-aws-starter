@@ -19,6 +19,48 @@ Coming Soon:
 - CI/CD
 - DRY Terraform Modules 
 
+## Prerequisites
+- AWS Access keys need to be configured so that you can provision AWS resources in your account. See the section "Configure Terraform for your AWS account" below for details.
+
+- `/ssh-keys` folder needs to be present in the root directory. This folder will hold AWS public key + secret that allows a user to SSH into the provisions EC2 instance. 
+    - Public key + secret need to be downloaded from AWS Account
+    - Run this command `ssh-keygen -t rsa -b 2048 -f my_key_pair` while in the /ssh-keys folder. This command generates two files: my_key_pair (private key) and my_key_pair.pub (public key).
+
+
+
+## Configure Terraform for your AWS account & Running Terraform
+To use Terraform with your AWS account, you need to set up authentication and configure Terraform to communicate with the AWS APIs. Here's a simplified step-by-step guide:
+
+1. **Install Terraform:** Ensure that you have the latest version of Terraform installed on your local machine. You can download it from Terraform's website.
+
+2. **AWS Access Keys:** You need to have an AWS access key ID and secret access key. These can be created in the AWS Management Console through the IAM (Identity and Access Management) section.
+    - Go to the IAM dashboard in your AWS account.
+    - Navigate to 'Users' and select your user or create a new one.
+    - Under the 'Security credentials' tab, create a new access key.
+    - Download the key file or note the access key ID and secret access key.
+
+3. **Configure AWS CLI:** It’s recommended to install and configure the AWS CLI with the access keys, as Terraform can automatically use the credentials from the AWS CLI configuration file.
+    - Install the AWS CLI.
+    - Configure it by running `aws configure` in your terminal and input your access key ID, secret access key, default region, and output format.
+        - You can either hard code your access key and secret in providers.tf as such:
+                `provider "aws" {
+                    region     = "us-west-2" // this line is already provided for you
+                    access_key = "your-access-key-id"
+                    secret_key = "your-secret-access-key"
+                }`
+        - Or you can set the public and secret in your environment variables as such:
+                    `export AWS_ACCESS_KEY_ID="your-access-key-id"
+                    export AWS_SECRET_ACCESS_KEY="your-secret-access-key"`
+
+
+
+4. **Initialize Terraform:** Navigate to your Terraform project directory in your command line tool and run `terraform init`. This command will initialize Terraform and download the necessary provider plugins. 
+
+5. Don't forget to add a db_password variable in variables.tf file and define in another file that you DO NOT commit (*terraform.auto.tfvars*). 
+6. Also, don't foreget to add `/ssh-keys` folder to your root directory. Instructions in **Prerequisites** section
+
+6. **Plan and Apply:** Run `terraform plan` to see the changes that Terraform will make to your AWS infrastructure, and terraform apply to apply those changes.
+
 ## I Just Want to Code
 1. Fork and then clone this repository to your local machine.
 2. Configure and Run Terraform for your AWS account so that you have a basic backend built. Once you have your infrastructure built you can start coding your backend. 
@@ -31,22 +73,6 @@ So 2 takeaways really:
 - Connect with API Gateway
 
 HAPPY CODING!
-
-## How to Configure & Run Terraform
-1. Download Terraform CLI
-2. `git clone` this repository
-3. Download Access Key & Secret from your AWS account
-    - IAM -> Security Credentials: set Key & Secret in env Variables or in provider.tf **(not recomended**) as such:  
-    - provider "aws" {  region     = "us-west-1" access_key = "YOUR_AWS_ACCESS_KEY" secret_key = "YOUR_AWS_SECRET_KEY"}  
-    - **NOTE: Do NOT commit provider.tf if you're hard coding it in provider.tf**
-    - **A better way to handle access/secret keys is to add them to env variables. The method shown above is a temporary quick way to connect your Terraform to aws account so that you can provision resources quickly**
-
-4. Run `terraform init` 
-5. Set your db password on line 17 of rds.tf 
-6. Run `terraform apply` -> 'yes' to confirm
-
-
-**After some time you should have the following AWS Services provisioned in your AWS account:**
 
 
 ## Provisioned AWS Resources (Detailed):
