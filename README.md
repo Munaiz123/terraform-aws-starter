@@ -19,22 +19,34 @@ Coming Soon:
 - CI/CD
 - DRY Terraform Modules 
 
+## I Just Want to Code
+1. Fork and then clone this repository to your local machine.
+2. Configure and Run Terraform for your AWS account so that you have a basic backend built. Once you have your infrastructure built you can start coding your backend. 
+3. You'll find index.js in the `/src` folder. This is the entry point of your backend and it will be mapped to a Lambda called "main-lambda".
+4. You can directly code within Lambda or feel free to upload a .zip of your project into the "main-lambda-bucket" S3 bucket.
+5. The API to connect your front end to your back end can be found in the API Gateway. Feel free to play around and create yourself a more robust API with more resources & methods.
 
-## How to Run Terraform
+So 2 takeaways really:
+- Code in Lambda
+- Connect with API Gateway
+
+HAPPY CODING!
+
+## How to Configure & Run Terraform
 1. Download Terraform CLI
 2. `git clone` this repository
 3. Download Access Key & Secret from your AWS account
     - IAM -> Security Credentials: set Key & Secret in env Variables or in provider.tf **(not recomended**) as such:  
     - provider "aws" {  region     = "us-west-1" access_key = "YOUR_AWS_ACCESS_KEY" secret_key = "YOUR_AWS_SECRET_KEY"}  
     - **NOTE: Do NOT commit provider.tf if you're hard coding it in provider.tf**
-    - **A better way to handle access/secret key is to add them to env variables. The method shown above is a temporary quickway to connect your terrform to aws account so that you can provision resources quickly**
+    - **A better way to handle access/secret keys is to add them to env variables. The method shown above is a temporary quick way to connect your Terraform to aws account so that you can provision resources quickly**
 
 4. Run `terraform init` 
 5. Set your db password on line 17 of rds.tf 
 6. Run `terraform apply` -> 'yes' to confirm
 
 
-**After sometime you should have the following AWS Services provisioned in your AWS account:**
+**After some time you should have the following AWS Services provisioned in your AWS account:**
 
 
 ## Provisioned AWS Resources (Detailed):
@@ -46,7 +58,7 @@ The `aws_internet_gateway.main_vpc_gateway` acts as the door between the private
 
 The code also defines two pairs of subnets `public_subnet` and `private_subnet`
 
-Subnets subdivide your private space into smaller, more manageable sections. A `public_subnet`is like the front yard, visible and accessible from the internet. A `private_subnet` is like your backyard. They're not directly accessible from the internet, providing more security for sensitive tasks
+Subnets subdivide your private space into smaller, more manageable sections. A `public_subnet` is like the front yard, visible and accessible from the internet. A `private_subnet` is like your backyard. They're not directly accessible from the internet, providing more security for sensitive tasks
  
 `subnet_a` and `subnet_b` are  set up in two different locations (zones) for better performance and reliability. The `aws_route_table.main_vpc_public_routetable` is a set of rules that determines how traffic from the public subnets can go to the internet, using the internet gateway.
 
@@ -64,17 +76,17 @@ If you want to SSH into your EC2 from your local terminal, be sure to create a f
 This command generates two files: my_key_pair (private key) and my_key_pair.pub (public key) **DO NOT COMMIT THESE**
 
 
-Once you have these two files, using your terminal cd into `/ssh-keys` folder and run this command:
+Once you have these two files, using your terminal cd into the`/ssh-keys` folder and run this command:
 
 `chmod 400 my_key_pair` 
 
 This command will make sure you have the private key (my_key_pair) on your local machine and that its permissions are set correctly
 
-While in the same `/ssh-keys` folder, use this command to access your provisioed EC2 instance: **(besure to put your ec2-ip address between `<>`. Also delete the `<>` after pasting your ec2-ip address)**
+While in the same `/ssh-keys` folder, use this command to access your provisioned EC2 instance: **(be sure to put your ec2-ip address between `<>`. Also delete the `<>` after pasting your ec2-ip address)**
 
 `ssh -i "my_key_pair" ec2-user@<your-ec2-ip-address>`
 
-Once you see something like this: `ubuntu@ip-xx-x-x-xx:~$` then you know you've succesfully connected to your EC2 instance. You can also use Cloud 9 to connect to your EC2 instance.
+Once you see something like this: `ubuntu@ip-xx-x-x-xx:~$` then you know you've successfully connected to your EC2 instance. You can also use Cloud 9 to connect to your EC2 instance.
 
 ### 3. RDS-PostgreSQL (terraform/rds.tf)
 
@@ -92,7 +104,7 @@ The easiest way to access your database is to download a database client tool li
 
 `main_lambda_api` is the gateway for your Lambda function, enabling it to be triggered via HTTP requests (GET, POST, etc). The API defines a public GET method at the API's root path, allowing anyone to access it without authentication.
 
-`main_lambda_integration` connects the GET method to your Lambda function and `apigw_lambda_permission` grants the API Gateway permission to invoke your Lambda function. These two combined allows your front end to interact with your backend.
+`main_lambda_integration` connects the GET method to your Lambda function and `apigw_lambda_permission` grants the API Gateway permission to invoke your Lambda function. These two combined allow your front end to interact with your back end.
 
 The API is then deployed with the GET method in a dev stage, making it available for use.
 
@@ -100,4 +112,4 @@ The API is then deployed with the GET method in a dev stage, making it available
 
 A serverless function called `main-lambda` is set up to run Node.js code stored in S3, with permissions to execute and log activities. CloudWatch captures and stores the Lambda function's logs for two weeks.
 
-You'll notice in the `/src` folder that there is the index.js file. This is the entry point into your backend. All front end requests will travel from the API gateway and hit the index.js file first. This is where you can start coding your backend code. 
+You'll notice in the `/src` folder that there is the index.js file. This is the entry point into your backend. All front-end requests will travel from the API gateway and hit the index.js file first. This is where you can start coding your backend code. 
